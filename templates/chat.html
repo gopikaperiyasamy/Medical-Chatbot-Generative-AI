@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Chatbot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      width: 95%;
+      max-width: 500px;
+      background-color: #1f1f1f;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #00BFFF;
+    }
+
+    #chatbox {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      max-height: 400px;
+    }
+
+    .user {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      align-self: flex-end;
+      max-width: 80%;
+      word-wrap: break-word;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .bot {
+      background-color: #2196F3;
+      color: white;
+      padding: 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      align-self: flex-start;
+      max-width: 80%;
+      word-wrap: break-word;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 12px;
+      border-radius: 25px;
+      border: none;
+      background-color: #333;
+      color: #fff;
+      outline: none;
+    }
+
+    #userInput::placeholder {
+      color: #aaa;
+    }
+
+    #sendButton {
+      padding: 12px 20px;
+      background-color: #00BFFF;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    #sendButton:hover {
+      background-color: #008CBA;
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+  <div class="chat-container">
+    <div class="chat-header">💬 Medical Chatbot</div>
+
+    <div id="chatbox"></div>
+
+    <div class="input-area">
+      <input id="userInput" type="text" placeholder="Type your medical question...">
+      <button id="sendButton">➤</button>
+    </div>
+  </div>
+
+  <script>
+    $("#sendButton").click(function () {
+      sendMessage();
+    });
+
+    $("#userInput").keypress(function (e) {
+      if (e.which == 13) sendMessage();
+    });
+
+    function sendMessage() {
+      var userText = $("#userInput").val().trim();
+      if (userText === "") return;
+
+      $("#chatbox").append("<div class='user'>" + userText + "</div>");
+      $("#userInput").val("");
+
+      $.ajax({
+        type: "POST",
+        url: "/get",
+        data: { msg: userText },
+        success: function (data) {
+          $("#chatbox").append("<div class='bot'>" + data + "</div>");
+          $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+        },
+        error: function () {
+          $("#chatbox").append("<div class='bot'>Sorry, there was an error processing your request.</div>");
+          $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+        }
+      });
+    }
+  </script>
+
+</body>
+
+</html>

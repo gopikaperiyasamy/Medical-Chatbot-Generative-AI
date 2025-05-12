@@ -10,5 +10,15 @@ conda activate medibot
 ```
 #Then install dependencies:
 ```bash 
+
 pip install -r requirements.txt
+```
+
+```bash 
+ set the env variables
+ PINECONE_API_KEY=""
+ GROQ_API_KEY=""
+#to run the project 
+1.python store_index.py
+2.python app.py
 ```
